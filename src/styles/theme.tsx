@@ -38,6 +38,9 @@ export const theme = extendTheme({
     "8xl": "6rem",
     "9xl": "8rem",
   },
+  sizes: {
+    screenMaxWidth: "1368px",
+  },
   styles: {
     global: {
       body: {
