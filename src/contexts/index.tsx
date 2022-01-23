@@ -3,6 +3,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 import { theme } from "../styles/theme";
 import { AuthProvider } from "./AuthContext";
+import { ProductsProvider } from "./Products";
 
 interface ProviderProps {
   children: ReactNode;
@@ -10,6 +11,8 @@ interface ProviderProps {
 
 export const Providers = ({ children }: ProviderProps) => (
   <AuthProvider>
-    <ChakraProvider theme={theme}>{children}</ChakraProvider>
+    <ProductsProvider>
+      <ChakraProvider theme={theme}>{children}</ChakraProvider>
+    </ProductsProvider>
   </AuthProvider>
 );
