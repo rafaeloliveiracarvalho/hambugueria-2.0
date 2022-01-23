@@ -3,10 +3,10 @@ import { extendTheme } from "@chakra-ui/react";
 export const theme = extendTheme({
   colors: {
     primary: "#27AE60",
-    primaryLight: "##93D7AF",
+    primaryLight: "#27ae6019",
     secondary: "#EB5757",
     feedback: {
-      negative: "#E60000",
+      error: "#E60000",
       warning: "#FFCD07",
       success: "#168821",
       information: "#155BCB",
@@ -42,6 +42,10 @@ export const theme = extendTheme({
       body: {
         bg: "#fff",
         color: "gray.900",
+        minHeight: "100vh",
+      },
+      "div#root": {
+        height: "100%",
       },
     },
   },
