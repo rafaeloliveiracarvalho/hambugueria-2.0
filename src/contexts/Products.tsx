@@ -22,6 +22,7 @@ interface IProduct {
 interface ProductsContextData {
   products: IProduct[];
   listProducts: () => Promise<void>;
+  searchProducts: (value: string) => Promise<void>;
 }
 
 const ProductsContext = createContext<ProductsContextData>(
@@ -40,8 +41,56 @@ const ProductsProvider = ({ children }: ProductsProviderData) => {
     }
   }, []);
 
+  const searchProducts = useCallback(async (value: string) => {
+    try {
+      const responseByName = await api.get(`/products?name_like=${value}`);
+      const responseByCategory = await api.get(
+        `/products?category_like=${value}`,
+      );
+
+      if (
+        responseByName.data.length === 0 &&
+        responseByCategory.data.length === 0
+      ) {
+        setProducts([] as IProduct[]);
+      } else if (
+        responseByName.data.length === 0 &&
+        responseByCategory.data.length > 0
+      ) {
+        setProducts([...responseByCategory.data]);
+      } else if (
+        responseByName.data.length > 0 &&
+        responseByCategory.data.length === 0
+      ) {
+        setProducts([...responseByName.data]);
+      } else {
+        const onlyByName = responseByName.data.filter(
+          (productByName: IProduct) =>
+            !responseByCategory.data.some(
+              (productByCategory: IProduct) =>
+                productByCategory.id === productByName.id,
+            ),
+        );
+        const fondProducts = onlyByName
+          .concat(responseByCategory.data)
+          .sort((a: IProduct, b: IProduct) => {
+            if (+a.id > +b.id) {
+              return 1;
+            }
+            if (+a.id < +b.id) {
+              return -1;
+            }
+            return 0;
+          });
+        setProducts([...fondProducts]);
+      }
+    } catch (err) {}
+  }, []);
+
   return (
-    <ProductsContext.Provider value={{ listProducts, products }}>
+    <ProductsContext.Provider
+      value={{ listProducts, searchProducts, products }}
+    >
       {children}
     </ProductsContext.Provider>
   );
