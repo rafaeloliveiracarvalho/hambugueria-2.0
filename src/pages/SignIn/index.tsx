@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { SignInInfo } from "./SignInInfo";
 import { SignInForm } from "./SignInForm";
 import { useAuth } from "../../contexts/AuthContext";
+import { Redirect } from "react-router-dom";
 
 interface SignInFormData {
   email: string;
@@ -18,7 +19,7 @@ const signInSchema = yup.object().shape({
 });
 
 export const SignIn = () => {
-  const { signIn } = useAuth();
+  const { signIn, accessToken } = useAuth();
 
   const {
     register,
@@ -72,6 +73,10 @@ export const SignIn = () => {
       .then((_) => successToast())
       .catch((_) => errorToast());
   };
+
+  if (accessToken) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <Center as="main" h="100%">
