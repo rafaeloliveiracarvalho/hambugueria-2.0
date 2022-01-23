@@ -89,6 +89,12 @@ export const SignUp = () => {
         paddingX={["15px", "15px", "20px"]}
         flexDir={["column", "column", "row", "row"]}
         gap={["15px", "15px", "auto", "auto"]}
+        justifyContent={[
+          "flex-start",
+          "flex-start",
+          "space-between",
+          "space-between",
+        ]}
       >
         <SignUpInfo />
         <SignUpForm

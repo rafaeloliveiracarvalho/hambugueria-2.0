@@ -48,17 +48,16 @@ export const SignUpForm = ({ handleSignUp, errors, register }: ISignUpForm) => {
         <Heading fontSize="18px" fontWeight="700" color="gray.800">
           Cadastro
         </Heading>
-        <Text
+        <HStack
+          gap="4"
           fontSize="14px"
           fontWeight="500"
           color="gray.300"
           textDecor="underline"
         >
-          <HStack gap="4">
-            <Link>Home</Link>
-            <Link>Login</Link>
-          </HStack>
-        </Text>
+          <Link>Home</Link>
+          <Link>Login</Link>
+        </HStack>
       </Flex>
       <VStack spacing="5">
         <Input
