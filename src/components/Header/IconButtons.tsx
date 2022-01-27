@@ -1,13 +1,13 @@
 import React, { ReactNode } from "react";
-import { Center } from "@chakra-ui/react";
+import { Center, CenterProps } from "@chakra-ui/react";
 import CartQuantityDisplay from "./CartQuantityDisplay";
 
-interface IconButtonProps {
+interface IconButtonProps extends CenterProps {
   children: ReactNode;
   isCart?: boolean;
 }
 
-const IconButton = ({ children, isCart }: IconButtonProps) => (
+const IconButton = ({ children, isCart, ...rest }: IconButtonProps) => (
   <Center
     as="button"
     ml="2"
@@ -16,7 +16,9 @@ const IconButton = ({ children, isCart }: IconButtonProps) => (
     fontSize="x-large"
     color="gray.300"
     cursor="pointer"
-    position="relative">
+    position="relative"
+    {...rest}
+  >
     {isCart && <CartQuantityDisplay />}
     {children}
   </Center>

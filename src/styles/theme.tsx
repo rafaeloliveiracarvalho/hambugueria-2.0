@@ -6,6 +6,7 @@ export const theme = extendTheme({
     primaryLight: "#93D7AF",
     primaryExtraLight: "#27ae6019",
     secondary: "#EB5757",
+    secondaryExtraLight: "#eb575719",
     feedback: {
       error: "#E60000",
       warning: "#FFCD07",

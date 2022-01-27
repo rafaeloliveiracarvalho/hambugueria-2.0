@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Button,
   Center,
@@ -20,21 +20,12 @@ interface IProduct {
 }
 
 export const ProductCard = ({ product }: IProduct) => {
-  const [scaleDefine, setScaleDefine] = useState("");
-  const { id, name, category, price, img_url } = product;
+  const { name, category, price, img_url } = product;
 
   const isWideScreen = useBreakpointValue({
     base: false,
     md: true,
   });
-
-  useEffect(() => {
-    if (isWideScreen) {
-      setScaleDefine("scale(1.1)");
-    } else {
-      setScaleDefine("scale(1)");
-    }
-  }, []);
 
   const moneyFormatter = new Intl.NumberFormat("pt-BR", {
     currency: "BRL",
@@ -54,15 +45,17 @@ export const ProductCard = ({ product }: IProduct) => {
       alignItems="flex-start"
       flexShrink={0}
       borderWidth="2px"
-      borderColor="gray.50"
+      borderColor={isWideScreen ? "gray.50" : "primary"}
       borderRadius="5px"
       scrollSnapAlign={["center", "center", "none"]}
       transition="all 0.4s ease-out"
+      transformOrigin="center"
+      // {isWideScreen ? () :}
+      // _focus={}
       _hover={
         isWideScreen
           ? {
               borderColor: "primary",
-              transformOrigin: "center",
               transform: "scale(1.1)",
               "div > button": {
                 bgColor: "primary",
@@ -72,15 +65,10 @@ export const ProductCard = ({ product }: IProduct) => {
               },
             }
           : {
-              borderColor: "primary",
-              transformOrigin: "center",
-              transform: "scale(1)",
-              "div > button": {
-                bgColor: "primary",
-                _hover: {
-                  bgColor: "primaryLight",
-                },
-              },
+              // transform: "scale(1)",
+              // "div > button": {
+              //   bgColor: "primary",
+              // },
             }
       }
     >
@@ -91,7 +79,12 @@ export const ProductCard = ({ product }: IProduct) => {
         paddingY="10px"
         boxSizing="border-box"
       >
-        <Image src={img_url} alt="Hamburguer" h="100%" objectFit="contain" />
+        <Image
+          src={require(`../../assets/img/${img_url}`)}
+          alt="Hamburguer"
+          h="100%"
+          objectFit="contain"
+        />
       </Center>
       <VStack
         w="100%"
@@ -116,8 +109,11 @@ export const ProductCard = ({ product }: IProduct) => {
           type="button"
           w="106px"
           h="40px"
-          bgColor="#bdbdbd"
+          bgColor={isWideScreen ? "#bdbdbd" : "primary"}
           color="white"
+          //   _pressed={{
+          //     bgColor: "primaryLight",
+          //   }}
         >
           Adicionar
         </Button>
