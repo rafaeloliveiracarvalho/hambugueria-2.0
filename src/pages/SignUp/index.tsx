@@ -78,7 +78,7 @@ export const SignUp = () => {
   const handleSignUp = (data: SignUpFormData) => {
     const { name, email, password } = data;
     api
-      .post("/signup", { name, email, password })
+      .post("/signup", { name, email, password, cart: [] })
       .then((_) => successToast())
       .catch((_) => errorToast());
   };
