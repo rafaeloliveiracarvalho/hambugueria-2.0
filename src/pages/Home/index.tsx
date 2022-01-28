@@ -5,7 +5,7 @@ import Header from "../../components/Header";
 import { ProductCard } from "./ProductCard";
 import { useProducts } from "../../contexts/Products";
 import { theme } from "../../styles/theme";
-import { ModalCart } from "../../components/Cart/ModalCart";
+import { ModalCart } from "../../components/Cart/Modals";
 import { useCart } from "../../contexts/Cart";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -24,7 +24,7 @@ export const Home = () => {
     if (accessToken) {
       listCart(user.id, accessToken);
     }
-  }, []);
+  }, [cart]);
 
   return (
     <>

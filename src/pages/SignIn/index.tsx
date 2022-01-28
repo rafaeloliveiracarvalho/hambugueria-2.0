@@ -3,15 +3,12 @@ import { Center, useBreakpointValue, useToast } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Redirect, useHistory } from "react-router-dom";
+
 import { SignInInfo } from "./SignInInfo";
 import { SignInForm } from "./SignInForm";
 import { useAuth } from "../../contexts/AuthContext";
-import { Redirect, useHistory } from "react-router-dom";
-
-interface SignInFormData {
-  email: string;
-  password: string;
-}
+import { SignInFormData } from "../../Types";
 
 const signInSchema = yup.object().shape({
   email: yup.string().required("Campo obrigatório"),

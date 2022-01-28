@@ -6,22 +6,13 @@ import React, {
   useCallback,
   ReactNode,
 } from "react";
+
 import { api } from "../services/api";
+import { SignInFormData as ISignInData, IUser } from "../Types";
 
 type AuthProviderProps = {
   children: ReactNode;
 };
-
-interface ISignInData {
-  email: string;
-  password: string;
-}
-
-interface IUser {
-  name: string;
-  email: string;
-  id: string;
-}
 
 interface IAuthState {
   user: IUser;

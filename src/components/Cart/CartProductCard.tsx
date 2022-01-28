@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Center,
   Flex,
@@ -12,20 +12,15 @@ import {
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 
 import { theme } from "../../styles/theme";
+import { IProductToCart } from "../../Types";
 
 interface IProduct {
-  product: {
-    id: string;
-    name: string;
-    category: string;
-    price: number;
-    img_url: string;
-    quantity: number;
-  };
+  product: IProductToCart;
 }
 
 export const CartProductCard = ({ product }: IProduct) => {
   const { name, category, img_url, price, quantity } = product;
+  const [convertedPrice, setConvertedPrice] = useState("");
   const isWideScreen = useBreakpointValue({
     base: false,
     lg: true,
@@ -35,9 +30,13 @@ export const CartProductCard = ({ product }: IProduct) => {
     const result = new Intl.NumberFormat("pt-BR", {
       style: "currency",
       currency: "BRL",
-    }).format(price);
-    return result;
+    }).format(Number(price));
+    setConvertedPrice(result);
   };
+
+  useEffect(() => {
+    formatAsCurrency();
+  }, []);
 
   return (
     <HStack
@@ -51,7 +50,11 @@ export const CartProductCard = ({ product }: IProduct) => {
       borderLeftRadius="5px"
     >
       <Center w="80px" h="100%" borderRadius="5px" bgColor="gray.100">
-        <Image w="80%" src={require(`../../assets/${img_url}`)} alt={name} />
+        <Image
+          w="80%"
+          src={require(`../../assets/img/${img_url}`)}
+          alt={name}
+        />
       </Center>
       <Flex
         h="100%"
@@ -77,7 +80,7 @@ export const CartProductCard = ({ product }: IProduct) => {
           {category}
         </Text>
         <Text as="p" fontWeight="600" fontSize="14px" color="primary">
-          {() => formatAsCurrency()}
+          {convertedPrice}
         </Text>
       </Flex>
       {isWideScreen ? (

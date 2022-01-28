@@ -7,20 +7,49 @@ import {
   Text,
   VStack,
   useBreakpointValue,
+  useToast,
 } from "@chakra-ui/react";
 
-interface IProduct {
-  product: {
-    id: string;
-    name: string;
-    category: string;
-    price: string;
-    img_url: string;
-  };
+import { useCart } from "../../contexts/Cart";
+import { useAuth } from "../../contexts/AuthContext";
+import { IProductToHome } from "../../Types";
+
+interface ProductCardProps {
+  product: IProductToHome;
 }
 
-export const ProductCard = ({ product }: IProduct) => {
+export const ProductCard = ({ product }: ProductCardProps) => {
+  const { addToCart } = useCart();
+  const { user, accessToken } = useAuth();
   const { name, category, price, img_url } = product;
+
+  const toast = useToast({
+    position: "top",
+    isClosable: true,
+    duration: 3000,
+  });
+
+  const errorToast = () => {
+    const id = "error-toast";
+    if (!toast.isActive(id)) {
+      toast({
+        id,
+        title: "É necessário entrar em sua conta!!!",
+        status: "error",
+        containerStyle: {
+          backgroundColor: "feedback.error",
+        },
+      });
+    }
+  };
+
+  const handleAddProduct = () => {
+    if (accessToken) {
+      addToCart(product, user, accessToken);
+    } else {
+      errorToast();
+    }
+  };
 
   const isWideScreen = useBreakpointValue({
     base: false,
@@ -107,6 +136,7 @@ export const ProductCard = ({ product }: IProduct) => {
         </Text>
         <Button
           type="button"
+          onClick={handleAddProduct}
           w="106px"
           h="40px"
           bgColor={isWideScreen ? "#bdbdbd" : "primary"}

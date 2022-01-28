@@ -18,7 +18,6 @@ interface ChakraMenuProps {
 
 export const ChakraMenu = ({ strokeWidth }: ChakraMenuProps) => {
   const { accessToken, user } = useAuth();
-  console.log(accessToken);
   return (
     <Menu
       direction="rtl"

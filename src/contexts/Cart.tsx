@@ -1,50 +1,34 @@
-import { access } from "fs";
-import {
+import React, {
   createContext,
   useContext,
   useState,
   useCallback,
   ReactNode,
 } from "react";
+import { string } from "yup/lib/locale";
+
 import { api } from "../services/api";
+import { IProductToCart, IUser, IProductToHome } from "../Types";
 
 type CartProviderProps = {
   children: ReactNode;
 };
 
-type IProduct = {
-  id: string;
-  name: string;
-  category: string;
-  price: number;
-  img_url: string;
-  quantity: number;
-};
-
-type IUser = {
-  email: string;
-  name: string;
-  cart: IProduct[];
-  id: string;
-};
-
-interface ICartProvider {
-  product: IProduct;
-  user: IUser;
-  accessToken: string;
-}
-
 interface CartContextData {
-  cart: IProduct[];
+  cart: IProductToCart[];
   listCart: (userId: string, accessToken: string) => Promise<void>;
-  addToCart: ({ product, user, accessToken }: ICartProvider) => Promise<void>;
+  addToCart: (
+    product: IProductToHome,
+    user: IUser,
+    accessToken: string,
+  ) => Promise<void>;
 }
 
 const CartContext = createContext<CartContextData>({} as CartContextData);
 
 const CartProvider = ({ children }: CartProviderProps) => {
   // SET CART
-  const [cart, setCart] = useState<IProduct[]>([] as IProduct[]);
+  const [cart, setCart] = useState<IProductToCart[]>([] as IProductToCart[]);
 
   // LIST PRODUCTS CART
   const listCart = useCallback(async (userId: string, accessToken: string) => {
@@ -60,28 +44,32 @@ const CartProvider = ({ children }: CartProviderProps) => {
 
   // ADD PRODUCT TO CART
   const addToCart = useCallback(
-    async ({ product, user, accessToken }: ICartProvider) => {
-      const { cart: currentCart, id: userId } = user;
+    async (product: IProductToHome, user: IUser, accessToken: string) => {
+      const { id: userId } = user;
 
-      const checkIsInTheCart = currentCart.some(
-        (productCart) => productCart.id === product.id,
+      const response = await api.get(`/users/${userId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      const currentCart = response.data.cart;
+
+      const index = currentCart.findIndex(
+        (productCart: IProductToCart) => productCart.id === product.id,
       );
 
+      const checkIsInTheCart = index >= 0;
+
       if (checkIsInTheCart) {
-        currentCart.forEach((productCart) => {
-          if (productCart.id === product.id && !!productCart.quantity) {
-            productCart.quantity += 1;
-          }
-        });
+        currentCart[index].quantity = String(+currentCart[index].quantity + 1);
       } else {
-        product.quantity = 1;
-        setCart([...cart, product]);
+        const productToCart: IProductToCart = { ...product, quantity: "1" };
+        currentCart.push(productToCart);
       }
 
       try {
         const response = await api.patch(
           `/users/${userId}`,
-          { cart: cart },
+          { cart: currentCart },
           { headers: { Authorization: `Bearer ${accessToken}` } },
         );
       } catch (err) {

@@ -3,19 +3,13 @@ import { Center, useToast } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Redirect } from "react-router-dom";
 
 import { SignUpInfo } from "./SignUpInfo";
 import { SignUpForm } from "./SignUpForm";
 import { api } from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
-import { Redirect } from "react-router-dom";
-
-interface SignUpFormData {
-  name: string;
-  email: string;
-  password: string;
-  confirm_password: string;
-}
+import { SignUpFormData } from "../../Types";
 
 const signUpSchema = yup.object().shape({
   name: yup.string().required("Campo obrigatório"),
