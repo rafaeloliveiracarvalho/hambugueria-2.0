@@ -1,34 +1,25 @@
 import React from "react";
-import {
-  Center,
-  Flex,
-  HStack,
-  useBreakpointValue,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { FiLogOut } from "react-icons/fi";
+import { Center, Flex, HStack, useBreakpointValue } from "@chakra-ui/react";
 import { FaShoppingCart } from "react-icons/fa";
-import { GiHamburgerMenu } from "react-icons/gi";
 
 import Logo from "./Logo";
 import IconButton from "./IconButtons";
 import { InputSearch } from "./InputSearch";
 import { theme } from "../../styles/theme";
-import { Menu } from "./Menu";
-import { useAuth } from "../../contexts/AuthContext";
 import { ChakraMenu } from "./ChakraMenu";
 
-const Header = () => {
+type THeader = {
+  onModalCartOpen: () => void;
+};
+
+const Header = ({ onModalCartOpen }: THeader) => {
   const isWideScreen = useBreakpointValue({
     base: false,
     md: true,
   });
 
-  const { isOpen, onToggle, onClose } = useDisclosure();
-
   return (
     <>
-      {/* <Menu isOpen={isOpen} onClose={onClose} /> */}
       <Flex
         h={["145px", "145px", "80px"]}
         w="auto"
@@ -51,16 +42,11 @@ const Header = () => {
           </Flex>
           <HStack spacing={6} h={6}>
             {isWideScreen && <InputSearch isWideScreen />}
-            <Center onClick={onToggle} flexShrink={0}>
+            <Center onClick={onModalCartOpen} flexShrink={0}>
               <IconButton isCart mr={2} ml={0}>
                 <FaShoppingCart strokeWidth={4} />
               </IconButton>
             </Center>
-            {/* <Center onClick={onToggle}>
-              <IconButton>
-                <FiLogOut strokeWidth={4} />
-              </IconButton>
-            </Center> */}
             <Center>
               <ChakraMenu strokeWidth={3} />
             </Center>
