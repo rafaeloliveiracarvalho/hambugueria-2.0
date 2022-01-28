@@ -22,6 +22,12 @@ interface CartContextData {
     user: IUser,
     accessToken: string,
   ) => Promise<void>;
+  updateQuantity: (
+    user: IUser,
+    accessToken: string,
+    productId: string,
+    isSum: boolean,
+  ) => Promise<void>;
 }
 
 const CartContext = createContext<CartContextData>({} as CartContextData);
@@ -78,8 +84,49 @@ const CartProvider = ({ children }: CartProviderProps) => {
     },
     [],
   );
+
+  // UPDATE QUANTITY
+  const updateQuantity = useCallback(
+    async (
+      user: IUser,
+      accessToken: string,
+      productId: string,
+      isSum: boolean,
+    ) => {
+      // const response = await api.get(`/users/${user.id}`, {
+      //   headers: { Authorization: `Bearer ${accessToken}` },
+      // });
+      const { cart: currentCart, id: userId } = user;
+
+      // const currentCart = response.data.cart;
+
+      const index = currentCart.findIndex(
+        (productCart: IProductToCart) => productCart.id === productId,
+      );
+
+      console.log(index);
+
+      if (isSum) {
+        currentCart[index].quantity = String(+currentCart[index].quantity + 1);
+      } else if (!isSum && +currentCart[index].quantity > 1) {
+        currentCart[index].quantity = String(+currentCart[index].quantity - 1);
+      }
+
+      try {
+        const response = await api.patch(
+          `/users/${userId}`,
+          { cart: currentCart },
+          { headers: { Authorization: `Bearer ${accessToken}` } },
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [],
+  );
+
   return (
-    <CartContext.Provider value={{ listCart, cart, addToCart }}>
+    <CartContext.Provider value={{ listCart, cart, addToCart, updateQuantity }}>
       {children}
     </CartContext.Provider>
   );

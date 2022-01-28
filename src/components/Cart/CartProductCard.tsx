@@ -13,12 +13,16 @@ import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 
 import { theme } from "../../styles/theme";
 import { IProductToCart } from "../../Types";
+import { useCart } from "../../contexts/Cart";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface IProduct {
   product: IProductToCart;
 }
 
 export const CartProductCard = ({ product }: IProduct) => {
+  const { updateQuantity, listCart } = useCart();
+  const { accessToken, user } = useAuth();
   const { name, category, img_url, price, quantity } = product;
   const [convertedPrice, setConvertedPrice] = useState("");
   const isWideScreen = useBreakpointValue({
@@ -37,6 +41,11 @@ export const CartProductCard = ({ product }: IProduct) => {
   useEffect(() => {
     formatAsCurrency();
   }, []);
+
+  const update = (isSum: boolean) => {
+    updateQuantity(user, accessToken, product.id, isSum);
+    listCart(user.id, accessToken);
+  };
 
   return (
     <HStack
@@ -85,7 +94,7 @@ export const CartProductCard = ({ product }: IProduct) => {
       </Flex>
       {isWideScreen ? (
         <HStack h="100%" w="fit-content" paddingY="5px">
-          <Center>
+          <Center as="button" onClick={() => update(false)}>
             <AiFillMinusCircle color={theme.colors.secondary} fontSize="25px" />
           </Center>
           <Center
@@ -98,7 +107,7 @@ export const CartProductCard = ({ product }: IProduct) => {
               {quantity}
             </Text>
           </Center>
-          <Center>
+          <Center as="button" onClick={() => update(true)}>
             <AiFillPlusCircle color={theme.colors.primary} fontSize="25px" />
           </Center>
         </HStack>
