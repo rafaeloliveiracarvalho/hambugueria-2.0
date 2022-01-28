@@ -8,14 +8,15 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-
-import { Input } from "../../components/Form/Input";
 import {
   DeepMap,
   FieldError,
   FieldValues,
   UseFormRegister,
 } from "react-hook-form";
+
+import { Input } from "../../components/Form/Input";
+import { useHistory } from "react-router-dom";
 
 interface SignInFormData {
   email: string;
@@ -29,6 +30,8 @@ interface ISignInForm {
 }
 
 export const SignInForm = ({ handleSignIn, errors, register }: ISignInForm) => {
+  const history = useHistory();
+
   return (
     <Flex
       as="form"
@@ -52,7 +55,7 @@ export const SignInForm = ({ handleSignIn, errors, register }: ISignInForm) => {
           color="gray.300"
           textDecor="underline"
         >
-          <Link>Home</Link>
+          <Link onClick={() => history.push("/")}>Home</Link>
         </Text>
       </Flex>
       <VStack spacing="5">
@@ -91,7 +94,8 @@ export const SignInForm = ({ handleSignIn, errors, register }: ISignInForm) => {
           Crie sua conta para saborear muitas delícias e matar sua fome!
         </Text>
         <Button
-          type="submit"
+          type="button"
+          onClick={() => history.push("/signup")}
           w="100%"
           h="60px"
           bgColor="gray.50"

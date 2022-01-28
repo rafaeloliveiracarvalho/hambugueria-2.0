@@ -8,14 +8,15 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-
-import { Input } from "../../components/Form/Input";
 import {
   DeepMap,
   FieldError,
   FieldValues,
   UseFormRegister,
 } from "react-hook-form";
+
+import { Input } from "../../components/Form/Input";
+import { useHistory } from "react-router-dom";
 
 interface SignUpFormData {
   name: string;
@@ -31,6 +32,7 @@ interface ISignUpForm {
 }
 
 export const SignUpForm = ({ handleSignUp, errors, register }: ISignUpForm) => {
+  const history = useHistory();
   return (
     <Flex
       as="form"
@@ -55,8 +57,8 @@ export const SignUpForm = ({ handleSignUp, errors, register }: ISignUpForm) => {
           color="gray.300"
           textDecor="underline"
         >
-          <Link>Home</Link>
-          <Link>Login</Link>
+          <Link onClick={() => history.push("/")}>Home</Link>
+          <Link onClick={() => history.push("/signin")}>Login</Link>
         </HStack>
       </Flex>
       <VStack spacing="5">
