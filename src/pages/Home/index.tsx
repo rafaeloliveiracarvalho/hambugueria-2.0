@@ -1,21 +1,37 @@
 import React, { useEffect } from "react";
-import { Center, useBreakpointValue } from "@chakra-ui/react";
+import { Center, useDisclosure } from "@chakra-ui/react";
 
 import Header from "../../components/Header";
 import { ProductCard } from "./ProductCard";
 import { useProducts } from "../../contexts/Products";
 import { theme } from "../../styles/theme";
+import { ModalCart } from "../../components/Cart/ModalCart";
+import { useCart } from "../../contexts/Cart";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const Home = () => {
+  const { user, accessToken } = useAuth();
+  const { cart, listCart } = useCart();
   const { listProducts, products } = useProducts();
+  const {
+    onClose: onModalCartClose,
+    isOpen: isModalCartOpen,
+    onOpen: onModalCartOpen,
+  } = useDisclosure();
 
   useEffect(() => {
     listProducts();
+    // listCart(user.id, accessToken);
   }, []);
 
   return (
     <>
-      <Header />
+      <ModalCart
+        isOpen={isModalCartOpen}
+        onClose={onModalCartClose}
+        cart={cart}
+      />
+      <Header onModalCartOpen={onModalCartOpen} />
       <Center
         as="main"
         w="100%"
