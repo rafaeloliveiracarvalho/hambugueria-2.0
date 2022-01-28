@@ -10,6 +10,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 
 import { theme } from "../../styles/theme";
 import { IProductToCart } from "../../Types";
@@ -21,7 +22,7 @@ interface IProduct {
 }
 
 export const CartProductCard = ({ product }: IProduct) => {
-  const { updateQuantity, listCart } = useCart();
+  const { updateQuantity, deleteFromCart, listCart } = useCart();
   const { accessToken, user } = useAuth();
   const { name, category, img_url, price, quantity } = product;
   const [convertedPrice, setConvertedPrice] = useState("");
@@ -94,9 +95,24 @@ export const CartProductCard = ({ product }: IProduct) => {
       </Flex>
       {isWideScreen ? (
         <HStack h="100%" w="fit-content" paddingY="5px">
-          <Center as="button" onClick={() => update(false)}>
-            <AiFillMinusCircle color={theme.colors.secondary} fontSize="25px" />
-          </Center>
+          {Number(quantity) > 1 ? (
+            <Center as="button" onClick={() => update(false)}>
+              <AiFillMinusCircle
+                color={theme.colors.secondary}
+                fontSize="25px"
+              />
+            </Center>
+          ) : (
+            <Center
+              as="button"
+              onClick={() => deleteFromCart(user, accessToken, product.id)}
+            >
+              <AiOutlineCloseCircle
+                color={theme.colors.secondary}
+                fontSize="25px"
+              />
+            </Center>
+          )}
           <Center
             h="70%"
             w="50px"
@@ -120,19 +136,31 @@ export const CartProductCard = ({ product }: IProduct) => {
             boxShadow="0 0 10px -5px rgba(10, 10, 10, 0.4)"
           >
             <Text as="span" fontSize="20px">
-              99
+              {quantity}
             </Text>
           </Center>
           <VStack>
-            <Center>
+            <Center as="button" onClick={() => update(true)}>
               <AiFillPlusCircle color={theme.colors.primary} fontSize="25px" />
             </Center>
-            <Center>
-              <AiFillMinusCircle
-                color={theme.colors.secondary}
-                fontSize="25px"
-              />
-            </Center>
+            {Number(quantity) > 1 ? (
+              <Center as="button" onClick={() => update(false)}>
+                <AiFillMinusCircle
+                  color={theme.colors.secondary}
+                  fontSize="25px"
+                />
+              </Center>
+            ) : (
+              <Center
+                as="button"
+                onClick={() => deleteFromCart(user, accessToken, product.id)}
+              >
+                <AiOutlineCloseCircle
+                  color={theme.colors.secondary}
+                  fontSize="25px"
+                />
+              </Center>
+            )}
           </VStack>
         </HStack>
       )}

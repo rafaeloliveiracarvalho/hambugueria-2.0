@@ -28,6 +28,11 @@ interface CartContextData {
     productId: string,
     isSum: boolean,
   ) => Promise<void>;
+  deleteFromCart: (
+    user: IUser,
+    accessToken: string,
+    productId: string,
+  ) => Promise<void>;
 }
 
 const CartContext = createContext<CartContextData>({} as CartContextData);
@@ -93,12 +98,12 @@ const CartProvider = ({ children }: CartProviderProps) => {
       productId: string,
       isSum: boolean,
     ) => {
-      // const response = await api.get(`/users/${user.id}`, {
-      //   headers: { Authorization: `Bearer ${accessToken}` },
-      // });
-      const { cart: currentCart, id: userId } = user;
+      const { id: userId } = user;
+      const response = await api.get(`/users/${userId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
 
-      // const currentCart = response.data.cart;
+      const currentCart = response.data.cart;
 
       const index = currentCart.findIndex(
         (productCart: IProductToCart) => productCart.id === productId,
@@ -125,8 +130,37 @@ const CartProvider = ({ children }: CartProviderProps) => {
     [],
   );
 
+  // DELETE PRODUCT FROM CART
+  const deleteFromCart = useCallback(
+    async (user: IUser, accessToken: string, productId: string) => {
+      const { id: userId } = user;
+      const response = await api.get(`/users/${userId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      const currentCart = response.data.cart;
+
+      const filteredCart = currentCart.filter(
+        (productCart: IProductToCart) => productCart.id !== productId,
+      );
+
+      try {
+        const response = await api.patch(
+          `/users/${userId}`,
+          { cart: filteredCart },
+          { headers: { Authorization: `Bearer ${accessToken}` } },
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [],
+  );
+
   return (
-    <CartContext.Provider value={{ listCart, cart, addToCart, updateQuantity }}>
+    <CartContext.Provider
+      value={{ listCart, cart, addToCart, updateQuantity, deleteFromCart }}
+    >
       {children}
     </CartContext.Provider>
   );
