@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { SignInInfo } from "./SignInInfo";
 import { SignInForm } from "./SignInForm";
 import { useAuth } from "../../contexts/AuthContext";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 
 interface SignInFormData {
   email: string;
@@ -20,6 +20,7 @@ const signInSchema = yup.object().shape({
 
 export const SignIn = () => {
   const { signIn, accessToken } = useAuth();
+  const history = useHistory();
 
   const {
     register,
@@ -34,20 +35,6 @@ export const SignIn = () => {
     isClosable: true,
     duration: 3000,
   });
-
-  const successToast = () => {
-    const id = "success-toast";
-    if (!toast.isActive(id)) {
-      toast({
-        id,
-        title: "Cadastro realizado com sucesso!!!",
-        status: "success",
-        containerStyle: {
-          backgroundColor: "feedback.success",
-        },
-      });
-    }
-  };
 
   const errorToast = () => {
     const id = "error-toast";
@@ -70,7 +57,7 @@ export const SignIn = () => {
 
   const handleSignIn = (data: SignInFormData) => {
     signIn(data)
-      .then((_) => successToast())
+      .then((_) => history.push("/"))
       .catch((_) => errorToast());
   };
 

@@ -21,7 +21,9 @@ export const Home = () => {
 
   useEffect(() => {
     listProducts();
-    // listCart(user.id, accessToken);
+    if (accessToken) {
+      listCart(user.id, accessToken);
+    }
   }, []);
 
   return (
