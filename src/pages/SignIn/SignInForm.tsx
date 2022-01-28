@@ -88,7 +88,7 @@ export const SignInForm = ({ handleSignIn, errors, register }: ISignInForm) => {
             borderColor: "primaryLight",
           }}
         >
-          Logar
+          Entrar
         </Button>
         <Text fontSize="14px" color="gray.300" textAlign="center" maxW="320px">
           Crie sua conta para saborear muitas delícias e matar sua fome!
