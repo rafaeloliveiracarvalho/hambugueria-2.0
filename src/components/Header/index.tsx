@@ -22,7 +22,7 @@ const Header = ({ onModalCartOpen }: THeader) => {
     <>
       <Flex
         h={["145px", "145px", "80px"]}
-        w="auto"
+        w="100%"
         bgColor="gray.50"
         paddingX={4}
         paddingBottom={[4, 4, 0]}

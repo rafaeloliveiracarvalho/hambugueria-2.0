@@ -48,6 +48,7 @@ export const theme = extendTheme({
         bg: "#fff",
         color: "gray.900",
         minHeight: "100vh",
+        width: "100vw",
       },
       "div#root": {
         height: "100%",
