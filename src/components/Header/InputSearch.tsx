@@ -1,11 +1,5 @@
 import React, { ChangeEvent } from "react";
-import {
-  Center,
-  IconButton,
-  Input,
-  InputGroup,
-  InputRightElement,
-} from "@chakra-ui/react";
+import { Center, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 

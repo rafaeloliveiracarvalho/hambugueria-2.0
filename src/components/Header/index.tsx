@@ -7,12 +7,14 @@ import IconButton from "./IconButtons";
 import { InputSearch } from "./InputSearch";
 import { theme } from "../../styles/theme";
 import { ChakraMenu } from "./ChakraMenu";
+import { useAuth } from "../../contexts/AuthContext";
 
 type THeader = {
   onModalCartOpen: () => void;
 };
 
 const Header = ({ onModalCartOpen }: THeader) => {
+  const { accessToken } = useAuth();
   const isWideScreen = useBreakpointValue({
     base: false,
     md: true,
@@ -43,7 +45,7 @@ const Header = ({ onModalCartOpen }: THeader) => {
           <HStack spacing={6} h={6}>
             {isWideScreen && <InputSearch isWideScreen />}
             <Center onClick={onModalCartOpen} flexShrink={0}>
-              <IconButton isCart mr={2} ml={0}>
+              <IconButton isCart ml={0}>
                 <FaShoppingCart strokeWidth={4} />
               </IconButton>
             </Center>
