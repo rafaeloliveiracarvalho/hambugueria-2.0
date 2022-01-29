@@ -36,6 +36,7 @@ interface CartContextData {
   calculateCartTotals: (user: IUser, accessToken: string) => void;
   cartTotalValue: number;
   cartTotalQuantity: number;
+  cleanCart: (user: IUser, accessToken: string) => Promise<void>;
 }
 
 const CartContext = createContext<CartContextData>({} as CartContextData);
@@ -113,8 +114,6 @@ const CartProvider = ({ children }: CartProviderProps) => {
         (productCart: IProductToCart) => productCart.id === productId,
       );
 
-      console.log(index);
-
       if (isSum) {
         currentCart[index].quantity = String(+currentCart[index].quantity + 1);
       } else if (!isSum && +currentCart[index].quantity > 1) {
@@ -189,6 +188,21 @@ const CartProvider = ({ children }: CartProviderProps) => {
     [],
   );
 
+  // CLEAN CART
+  const cleanCart = useCallback(async (user: IUser, accessToken: string) => {
+    const { id: userId } = user;
+    try {
+      const response = await api.patch(
+        `/users/${userId}`,
+        { cart: [] },
+        { headers: { Authorization: `Bearer ${accessToken}` } },
+      );
+      setCart([] as IProductToCart[]);
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+
   return (
     <CartContext.Provider
       value={{
@@ -200,6 +214,7 @@ const CartProvider = ({ children }: CartProviderProps) => {
         cartTotalQuantity,
         cartTotalValue,
         calculateCartTotals,
+        cleanCart,
       }}
     >
       {children}

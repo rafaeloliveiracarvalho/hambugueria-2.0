@@ -28,7 +28,7 @@ interface IModalCart {
 }
 
 export const NoEmptyCartModal = ({ isOpen, onClose, cart }: IModalCart) => {
-  const { cartTotalValue, calculateCartTotals } = useCart();
+  const { cartTotalValue, calculateCartTotals, cleanCart } = useCart();
   const { user, accessToken } = useAuth();
 
   const moneyFormatter = new Intl.NumberFormat("pt-BR", {
@@ -92,6 +92,7 @@ export const NoEmptyCartModal = ({ isOpen, onClose, cart }: IModalCart) => {
             <Text>{moneyFormatter.format(cartTotalValue)}</Text>
           </HStack>
           <Button
+            onClick={() => cleanCart(user, accessToken)}
             h="60px"
             bgColor="gray.100"
             color="gray.300"
