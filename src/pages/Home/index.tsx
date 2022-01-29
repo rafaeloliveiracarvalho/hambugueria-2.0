@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Center, useDisclosure } from "@chakra-ui/react";
+import { Center, Heading, useDisclosure } from "@chakra-ui/react";
 
 import Header from "../../components/Header";
 import { ProductCard } from "./ProductCard";
@@ -40,14 +40,14 @@ export const Home = () => {
       <Center
         as="main"
         w="100%"
-        h="100%"
+        h="fit-content"
         paddingTop="10px"
         paddingX={[0, 0, 4]}
         paddingBottom="40px"
       >
         <Center
           as="section"
-          w={["auto", "auto", "100%"]}
+          w={["auto", "auto", "100%", "100%"]}
           h="100%"
           maxW={`calc(${theme.sizes.screenMaxWidth} + 50px)`}
           justifyContent={["flex-start", "center", "center", "center"]}
@@ -59,9 +59,20 @@ export const Home = () => {
           transitionDuration="0.5s"
           transitionProperty="width, alignItems, flexWrap"
         >
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {products.length > 0 ? (
+            products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))
+          ) : (
+            <Heading
+              color="gray.800"
+              fontSize="2xl"
+              textAlign="center"
+              mt="80px"
+            >
+              Nenhum produto foi encontrado.
+            </Heading>
+          )}
         </Center>
       </Center>
     </>
