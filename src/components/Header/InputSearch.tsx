@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 
 import { theme } from "../../styles/theme";
 import { useProducts } from "../../contexts/Products";
+import { AiFillCloseCircle } from "react-icons/ai";
 
 type InputSearch = {
   isWideScreen?: boolean;
@@ -15,11 +16,16 @@ type FormData = {
 };
 
 export const InputSearch = ({ isWideScreen }: InputSearch) => {
-  const { handleSubmit, register } = useForm<FormData>();
+  const { handleSubmit, register, reset } = useForm<FormData>();
   const { searchProducts, listProducts } = useProducts();
 
   const handleSearchProducts = ({ value }: FormData) => {
     searchProducts(value);
+  };
+
+  const handleCleanSearch = () => {
+    reset();
+    listProducts();
   };
 
   const emptyInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -68,9 +74,23 @@ export const InputSearch = ({ isWideScreen }: InputSearch) => {
       >
         <Center
           as="button"
-          type="submit"
+          type="button"
+          onClick={handleCleanSearch}
           w="100%"
           h="100%"
+          mr={1}
+          fontSize={25}
+          color="gray.100"
+        >
+          <AiFillCloseCircle />
+        </Center>
+        <Center
+          as="button"
+          type="submit"
+          w="53px"
+          h="100%"
+          mr={6}
+          flexShrink={0}
           bgColor={theme.colors.primary}
           _hover={{
             backgroundColor: `${theme.colors.primaryLight}`,
