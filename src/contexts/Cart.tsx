@@ -5,7 +5,7 @@ import React, {
   useCallback,
   ReactNode,
 } from "react";
-import { string } from "yup/lib/locale";
+import { number, string } from "yup/lib/locale";
 
 import { api } from "../services/api";
 import { IProductToCart, IUser, IProductToHome } from "../Types";
@@ -33,13 +33,17 @@ interface CartContextData {
     accessToken: string,
     productId: string,
   ) => Promise<void>;
+  calculateCartTotals: (user: IUser, accessToken: string) => void;
+  cartTotalValue: number;
+  cartTotalQuantity: number;
 }
 
 const CartContext = createContext<CartContextData>({} as CartContextData);
 
 const CartProvider = ({ children }: CartProviderProps) => {
-  // SET CART
   const [cart, setCart] = useState<IProductToCart[]>([] as IProductToCart[]);
+  const [cartTotalValue, setCartTotalValue] = useState(0);
+  const [cartTotalQuantity, setCartTotalQuantity] = useState(0);
 
   // LIST PRODUCTS CART
   const listCart = useCallback(async (userId: string, accessToken: string) => {
@@ -87,7 +91,7 @@ const CartProvider = ({ children }: CartProviderProps) => {
         console.log(err);
       }
     },
-    [],
+    [cart],
   );
 
   // UPDATE QUANTITY
@@ -157,9 +161,46 @@ const CartProvider = ({ children }: CartProviderProps) => {
     [],
   );
 
+  // TOTAL QUANTITY AND VALUE OF PRODUCTS IN CART
+  const calculateCartTotals = useCallback(
+    async (user: IUser, accessToken: string) => {
+      const { id: userId } = user;
+      const response = await api.get(`/users/${userId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      const currentCart = response.data.cart;
+
+      const totalValue = currentCart.reduce(
+        (total: number, product: IProductToCart) =>
+          total + Number(product.price) * Number(product.quantity),
+        0,
+      );
+
+      const totalQuantity = currentCart.reduce(
+        (total: number, product: IProductToCart) =>
+          total + Number(product.quantity),
+        0,
+      );
+
+      setCartTotalValue(totalValue);
+      setCartTotalQuantity(totalQuantity);
+    },
+    [],
+  );
+
   return (
     <CartContext.Provider
-      value={{ listCart, cart, addToCart, updateQuantity, deleteFromCart }}
+      value={{
+        listCart,
+        cart,
+        addToCart,
+        updateQuantity,
+        deleteFromCart,
+        cartTotalQuantity,
+        cartTotalValue,
+        calculateCartTotals,
+      }}
     >
       {children}
     </CartContext.Provider>

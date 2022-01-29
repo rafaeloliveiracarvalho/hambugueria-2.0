@@ -17,6 +17,9 @@ import { IoMdClose } from "react-icons/io";
 
 import { CartProductCard } from "../CartProductCard";
 import { IProductToCart as IProduct } from "../../../Types";
+import { useCart } from "../../../contexts/Cart";
+import { useEffect } from "react";
+import { useAuth } from "../../../contexts/AuthContext";
 
 interface IModalCart {
   isOpen: boolean;
@@ -25,6 +28,20 @@ interface IModalCart {
 }
 
 export const NoEmptyCartModal = ({ isOpen, onClose, cart }: IModalCart) => {
+  const { cartTotalValue, calculateCartTotals } = useCart();
+  const { user, accessToken } = useAuth();
+
+  const moneyFormatter = new Intl.NumberFormat("pt-BR", {
+    currency: "BRL",
+    style: "currency",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  useEffect(() => {
+    calculateCartTotals(user, accessToken);
+  }, [cart]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -72,7 +89,7 @@ export const NoEmptyCartModal = ({ isOpen, onClose, cart }: IModalCart) => {
           <Divider borderColor="gray.100" borderWidth="2px" />
           <HStack w="100%" justifyContent="space-between">
             <Text>Total</Text>
-            <Text>R$ 14,00</Text>
+            <Text>{moneyFormatter.format(cartTotalValue)}</Text>
           </HStack>
           <Button
             h="60px"
